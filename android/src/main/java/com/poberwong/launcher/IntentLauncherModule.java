@@ -22,6 +22,7 @@ public class IntentLauncherModule extends ReactContextBaseJavaModule {
     private static final String ATTR_CATEGORY = "category";
     private static final String TAG_EXTRA = "extra";
     private static final String ATTR_DATA = "data";
+    private static final String ATTR_DATA_TYPE = "type";
     private static final String ATTR_FLAGS = "flags";
 
     public IntentLauncherModule(ReactApplicationContext reactContext) {
@@ -42,7 +43,11 @@ public class IntentLauncherModule extends ReactContextBaseJavaModule {
     public void startActivity(ReadableMap params){
         Intent intent = new Intent();
         if (params.hasKey(ATTR_DATA)) {
-            intent.setData(Uri.parse(params.getString(ATTR_DATA)));
+            if (params.hasKey(ATTR_DATA_TYPE)) {
+                intent.setDataAndType(Uri.parse(params.getString(ATTR_DATA)), params.getString(ATTR_DATA_TYPE));
+            } else {
+                intent.setData(Uri.parse(params.getString(ATTR_DATA)));
+            }
         }
         if (params.hasKey(TAG_EXTRA)) {
             intent.putExtras(Arguments.toBundle(params.getMap(TAG_EXTRA)));
